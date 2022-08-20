@@ -14,48 +14,48 @@ router.get("/", VerifyMiddleware, async (req, res) => {
       },
     });
 
-    // const user = res.locals.user;
-    // if (user) {
-    //   const likeitems = await Like.findAll({
-    //     where: { userkey: user.userkey },
-    //   });
+    const user = res.locals.user;
+    if (user) {
+      const likeitems = await Like.findAll({
+        where: { userkey: user.userkey },
+      });
 
-    //   res.status(200).json({
-    //     data: datas.map((e) => {
-    //       return {
-    //         itemkey: e.itemkey,
-    //         title: e.title,
-    //         img: e.img,
-    //         content: e.content,
-    //         category: e.category,
-    //         price: e.price,
-    //         location: e.location,
-    //         star: 0,
-    //         auth: e.User.nickname,
-    //       };
-    //     }),
-    //     likes: likeitems.map((i) => {
-    //       return i.itemkey;
-    //     }),
-    //   });
-    // } else {
-    //   res.status(200).json({
-    //     data: datas.map((e) => {
-    //       return {
-    //         itemkey: e.itemkey,
-    //         title: e.title,
-    //         img: e.img,
-    //         content: e.content,
-    //         category: e.category,
-    //         price: e.price,
-    //         location: e.location,
-    //         star: 0,
-    //         auth: e.User.nickname,
-    //       };
-    //     }),
-    //     likes: [],
-    //   });
-    // }
+      res.status(200).json({
+        data: datas.map((e) => {
+          return {
+            itemkey: e.itemkey,
+            title: e.title,
+            img: e.img,
+            content: e.content,
+            category: e.category,
+            price: e.price,
+            location: e.location,
+            star: 0,
+            auth: e.User.nickname,
+          };
+        }),
+        likes: likeitems.map((i) => {
+          return i.itemkey;
+        }),
+      });
+    } else {
+      res.status(200).json({
+        data: datas.map((e) => {
+          return {
+            itemkey: e.itemkey,
+            title: e.title,
+            img: e.img,
+            content: e.content,
+            category: e.category,
+            price: e.price,
+            location: e.location,
+            star: 0,
+            auth: e.User.nickname,
+          };
+        }),
+        likes: [],
+      });
+    }
 
     // 각 게시물 안에 star 값을 배열로 드릴수 있음
     // const comments = datas.map((e) => {
@@ -87,35 +87,37 @@ router.get("/", VerifyMiddleware, async (req, res) => {
 
     // like 처럼 따로 키 벨류 값으로 드리기
 
-    const comments = datas.map((e) => {
-      return Comment.findAll({
-        where: { itemkey: e.itemkey },
-        attributes: ["star", "itemkey"],
-      });
-    });
-    let sumStar = 0;
-    let avg2 = 0;
-    Promise.all(comments).then((value) => {
-      // console.log(value);
-      const arr = value.map((i) => {
-        console.log(i);
-      });
+    // const comments = datas.map((e) => {
+    //   return Comment.findAll({
+    //     where: { itemkey: e.itemkey },
+    //     attributes: ["star", "itemkey"],
+    //   });
+    // });
+    // let sumStar = 0;
+    // let avg2 = 0;
+    // Promise.all(comments).then((value) => {
+    //   // console.log(value);
+    //   const arr = value.map((i) => {
+    //     console.log(i);
+    //   });
 
-      // sumStar = 0;
-      // avg2 = 0;
-      // if (value[i] === []) {
-      // } else {
-      //   for (let i = 0; i < value[i].length; i++) {
-      //     sumStar += value[i].star;
-      //   }
-      //   avg2 = sumStar / value.length;
-      // }
+    //   res.status(200).json({
+    //     ok: false,
+    //   });
+    //   return;
+    // });
 
-      res.status(200).json({
-        ok: false,
-      });
-      return;
-    });
+    //  sd
+
+    // sumStar = 0;
+    // avg2 = 0;
+    // if (value[i] === []) {
+    // } else {
+    //   for (let i = 0; i < value[i].length; i++) {
+    //     sumStar += value[i].star;
+    //   }
+    //   avg2 = sumStar / value.length;
+    // }
 
     // const aaa = value.map((e, i) => {
     //   console.log(e[i]);
