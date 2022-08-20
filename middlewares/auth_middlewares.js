@@ -1,9 +1,10 @@
 const jwt = require("jsonwebtoken");
 const { User } = require("../models");
+require("dotenv").config();
 
 module.exports = (req, res, next) => {
   try {
-    const {authorization} = req.headers;
+    const { authorization } = req.headers;
     const [tokenType, tokenValue] = authorization.split(" ");
 
     if (tokenType !== "Bearer") {
@@ -17,7 +18,7 @@ module.exports = (req, res, next) => {
       const { privatekey } = jwt.verify(tokenValue, process.env.secret_key);
       console.log(privatekey);
       User.findByPk(privatekey).then((userkey, nickname) => {
-        res.locals.user = {userkey, nickname};
+        res.locals.user = { userkey, nickname };
         next();
       });
     } catch (err) {

@@ -1,13 +1,17 @@
 module.exports = (req, res, next) => {
-    const {token} = req.header;
+  //   const { token } = req.header;
+  //   console.log(token);
 
-    if(token){
-        return res.status(409).json({
-            ok: false,
-            do: token,
-            errorMessage: "이미 로그인 중입니다"
-        });
-    };
+  const { authorization } = req.headers;
+  //   console.log(authorization);
 
-    next();    
+  if (authorization) {
+    return res.status(409).json({
+      ok: false,
+      do: authorization,
+      errorMessage: "이미 로그인 중입니다",
+    });
+  }
+
+  next();
 };
