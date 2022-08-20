@@ -40,7 +40,7 @@ router.get("/", async (req, res) => {
 // 숙소 생성하기(미들웨어 적용해야함)
 router.post("/", async (req, res) => {
   try {
-    // const { itemkey } = res.locals.user;
+    // const { userkey } = res.locals.user;
 
     const {
       title,
@@ -164,7 +164,7 @@ router.get("/:itemkey", async (req, res) => {
 // 숙소 수정하기
 router.put("/:itemkey", async (req, res) => {
   try {
-    // const { itemkey } = res.locals.user;
+    // const { userkey } = res.locals.user;
 
     const { itemkey } = req.params;
     const {
@@ -232,6 +232,50 @@ router.put("/:itemkey", async (req, res) => {
     res.status(400).json({
       result: false,
       errormessage: "숙소 수정에 실패하였습니다.",
+    });
+    return;
+  }
+});
+
+// 숙소 삭제하기
+router.delete("/:itemkey", async (req, res) => {
+  try {
+    // const { userkey } = res.locals.user;
+    const userkey = 1; // 임시
+
+    const { itemkey } = req.params;
+
+    const data = await Item.findOne({
+      where: { itemkey },
+    });
+
+    if (data === null) {
+      res.status(400).json({
+        result: false,
+        errormessage: "해당 숙소를 찾을 수 없습니다.",
+      });
+      return;
+    } else {
+      if (userkey === data.userkey) {
+        await Item.destroy({ where: { itemkey } });
+        res.status(200).json({
+          result: true,
+          message: "숙소를 삭제했습니다.",
+        });
+        return;
+      } else {
+        res.status(400).json({
+          result: false,
+          errormessage: "호스트가 일치 하지 않습니다.",
+        });
+        return;
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({
+      result: false,
+      errormessage: "숙소 삭제에 실패하였습니다.",
     });
     return;
   }
