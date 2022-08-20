@@ -30,8 +30,8 @@ router.get("/", async (req, res) => {
     });
   } catch (err) {
     res.status(400).json({
-      ok: false,
-      errorMessage: "숙소를 불러오지 못하였습니다",
+      result: false,
+      errormessage: "숙소를 불러오지 못하였습니다",
     });
     return;
   }
@@ -40,6 +40,8 @@ router.get("/", async (req, res) => {
 // 숙소 생성하기(미들웨어 적용해야함)
 router.post("/", async (req, res) => {
   try {
+    // const { itemkey } = res.locals.user;
+
     const {
       title,
       img,
@@ -59,8 +61,8 @@ router.post("/", async (req, res) => {
       location === ""
     ) {
       res.status(400).json({
-        ok: false,
-        errorMessage: "항목들을 모두 입력해주세요.",
+        result: false,
+        errormessage: "항목들을 모두 입력해주세요.",
       });
       return;
     }
@@ -94,8 +96,8 @@ router.post("/", async (req, res) => {
     return;
   } catch (err) {
     res.status(400).json({
-      ok: false,
-      errorMessage: "숙소 등록에 실패하였습니다.",
+      result: false,
+      errormessage: "숙소 등록에 실패하였습니다.",
     });
     return;
   }
@@ -115,8 +117,8 @@ router.get("/:itemkey", async (req, res) => {
 
     if (data === null) {
       res.status(400).json({
-        ok: false,
-        errorMessage: "해당 숙소를 찾을 수 없습니다.",
+        result: false,
+        errormessage: "해당 숙소를 찾을 수 없습니다.",
       });
       return;
     }
@@ -151,10 +153,85 @@ router.get("/:itemkey", async (req, res) => {
     });
     return;
   } catch (err) {
-    console.log(err);
     res.status(400).json({
-      ok: false,
-      errorMessage: "숙소 상세 정보를 불러오지 못하였습니다.",
+      result: false,
+      errormessage: "숙소 상세 정보를 불러오지 못하였습니다.",
+    });
+    return;
+  }
+});
+
+// 숙소 수정하기
+router.put("/:itemkey", async (req, res) => {
+  try {
+    // const { itemkey } = res.locals.user;
+
+    const { itemkey } = req.params;
+    const {
+      title,
+      img,
+      content,
+      category,
+      price,
+      location,
+      userkey /*임시 유저키*/,
+    } = req.body;
+
+    if (
+      title === "" ||
+      img === "" ||
+      category === "" ||
+      content === "" ||
+      price === "" ||
+      location === ""
+    ) {
+      res.status(400).json({
+        result: false,
+        errormessage: "항목들을 모두 입력해주세요.",
+      });
+      return;
+    }
+
+    const data = await Item.findOne({
+      where: { itemkey },
+    });
+
+    if (data === null) {
+      res.status(400).json({
+        result: false,
+        errormessage: "해당 숙소를 찾을 수 없습니다.",
+      });
+      return;
+    } else {
+      if (userkey === data.userkey) {
+        await Item.update(
+          {
+            title,
+            img,
+            content,
+            category,
+            price,
+            location,
+          },
+          { where: { itemkey } }
+        );
+        res.status(200).json({
+          result: true,
+          message: "숙소를 수정했습니다.",
+        });
+        return;
+      } else {
+        res.status(400).json({
+          result: false,
+          errormessage: "호스트가 일치 하지 않습니다.",
+        });
+        return;
+      }
+    }
+  } catch (err) {
+    res.status(400).json({
+      result: false,
+      errormessage: "숙소 수정에 실패하였습니다.",
     });
     return;
   }
