@@ -12,6 +12,7 @@ module.exports = (req, res, next) => {
 
     User.findByPk(privatekey).then((userkey, nickname) => {
         res.locals.user = {userkey, nickname};
+        console.log(res.locals.user);
         next();
     });
 };
