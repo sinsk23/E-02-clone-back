@@ -3,8 +3,7 @@ const { User } = require("../models");
 
 module.exports = (req, res, next) => {
   try {
-    const { authorization } = req.headers;
-    console.log(authorization);
+    const {authorization} = req.headers;
     const [tokenType, tokenValue] = authorization.split(" ");
 
     if (tokenType !== "Bearer") {

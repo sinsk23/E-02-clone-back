@@ -7,12 +7,12 @@ class UserController {
     userService = new UserService;
 
     createUser = async(req, res, next) => {
-        const {userId, email, nickname, password} = req.body;
+        const {userId, email, nickname, password, host} = req.body;
 
-        const createUserData = await this.userService.createUser(userId, email, nickname, password);
+        const createUserData = await this.userService.createUser(userId, email, nickname, password, host);
         
         if(!createUserData){
-            res.status(400).json({
+            return res.status(400).json({
                 result: false,
                 errormessage: "회원 가입에 실패하였습니다."
             });
@@ -24,7 +24,7 @@ class UserController {
         });
     };
     
-    login = async(userId, password) => {
+    login = async(req, res, next) => {
         const {userId, password} = req.body;
 
         const loginUserData = await this.userService.login(userId, password);
@@ -34,10 +34,12 @@ class UserController {
                 result: false,
                 errormessage: "로그인에 실패하였습니다"
             });
+            return;
         };
 
         let payload = {userkey: loginUserData.userkey, nickname: loginUserData.nickname};
         const token = jwt.sign(payload, process.env.secret_key, {expiresIn: "1d"});
+        res.header("token", token);
 
         res.status(200).json({
             result: true,

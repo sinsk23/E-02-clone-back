@@ -3,8 +3,8 @@ const UserRepository = require("../repositories/user.repositories");
 class UserService{
     userRepository = new UserRepository();
 
-    createUser = async(userId, email, nickname, password) => {
-        const createUserData = await this.userRepository.createUser(userId, email, nickname, password);
+    createUser = async(userId, email, nickname, password, host) => {
+        const createUserData = await this.userRepository.createUser(userId, email, nickname, password, host);
 
         return{
             nickname: createUserData.nickname
@@ -14,9 +14,13 @@ class UserService{
     login = async(userId, password) => {
         const loginUserData = await this.userRepository.login(userId, password);
 
-        return{
-            userId: loginUserData.userId,
-            nickname: loginUserData.nickname
+        try{
+            return{
+                userkey: loginUserData.userkey,
+                nickname: loginUserData.nickname
+            };
+        }catch{
+
         };
     };
 };
