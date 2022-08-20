@@ -12,6 +12,8 @@ router.get("/", async (req, res) => {
       },
     });
     // console.log(datas);
+    let sumStar = 0;
+    let avg2 = 0;
 
     res.status(200).json({
       data: datas.map((e) => {
@@ -23,12 +25,50 @@ router.get("/", async (req, res) => {
           category: e.category,
           price: e.price,
           location: e.location,
-          //   star: e.asdf, // 나중에 배열로 바꿔서 돌려야하는데 흠.. 어렵네 이게
+          // star: avg2, // 나중에 배열로 바꿔서 돌려야하는데 흠.. 어렵네 이게
           auth: e.User.nickname,
         };
       }),
     });
+
+    // 후기 평점도 같이 가져오기(아직 안댐)
+    // res.status(200).json({
+    //   data: datas.map(async (e) => {
+    //     const comments = await Comment.findAll({
+    //       where: { itemkey: e.itemkey },
+    //       attributes: ["star"],
+    //     });
+    //     console.log(comments);
+
+    // sumStar = 0;
+    // avg2 = 0;
+    // if (comments[0] === undefined) {
+    // } else {
+    //   for (let i = 0; i < comments.length; i++) {
+    //     sumStar += comments[i].star;
+    //   }
+    //   avg2 = sumStar / comments.length;
+    // }
+    // console.log(avg2);
+
+    // wait();
+    // console.log(avg2);
+
+    // return {
+    //   itemkey: e.itemkey,
+    //   title: e.title,
+    //   img: e.img,
+    //   content: e.content,
+    //   category: e.category,
+    //   price: e.price,
+    //   location: e.location,
+    //   star: comments, // 나중에 배열로 바꿔서 돌려야하는데 흠.. 어렵네 이게
+    //   auth: e.User.nickname,
+    // };
+    //   }),
+    // });
   } catch (err) {
+    console.log(err);
     res.status(400).json({
       result: false,
       errormessage: "숙소를 불러오지 못하였습니다",
@@ -272,7 +312,6 @@ router.delete("/:itemkey", async (req, res) => {
       }
     }
   } catch (err) {
-    console.log(err);
     res.status(400).json({
       result: false,
       errormessage: "숙소 삭제에 실패하였습니다.",
