@@ -32,7 +32,7 @@ router.get("/", VerifyMiddleware, async (req, res) => {
             category: e.category,
             price: e.price,
             location: e.location,
-            // star: avg2, // 나중에 배열로 바꿔서 돌려야하는데 흠.. 어렵네 이게
+            star: 0, // 나중에 배열로 바꿔서 돌려야하는데 흠.. 어렵네 이게
             auth: e.User.nickname,
           };
         }),
@@ -53,7 +53,7 @@ router.get("/", VerifyMiddleware, async (req, res) => {
             category: e.category,
             price: e.price,
             location: e.location,
-            // star: avg2, // 나중에 배열로 바꿔서 돌려야하는데 흠.. 어렵네 이게
+            star: 0, // 나중에 배열로 바꿔서 돌려야하는데 흠.. 어렵네 이게
             auth: e.User.nickname,
           };
         }),
