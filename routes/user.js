@@ -7,6 +7,6 @@ const UserController = require("../controllers/user.controllers");
 const userController = new UserController();
 
 router.post("/join", DuplicateLoginCheckMiddleware, userController.createUser);
-router.post("/login", VerifyMiddleware, DuplicateLoginCheckMiddleware, userController.login);
+router.post("/login", DuplicateLoginCheckMiddleware, userController.login);
 
 module.exports = router;

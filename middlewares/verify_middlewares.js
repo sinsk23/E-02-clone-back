@@ -1,21 +1,22 @@
 const jwt = require("jsonwebtoken");
 const { User } = require("../models");
+require("dotenv").config();
 
 module.exports = (req, res, next) => {
-    const {token} = req.headers;
-    
-    if(token){
-        const [tokenType, tokenValue] = authentication.split(" ");
+  // const {token} = req.headers;
+  const { authorization } = req.headers;
+  console.log(authorization);
 
-        const {privatekey} = jwt.verify(tokenValue, process.env.secret_key);
+  if (authorization) {
+    const [tokenType, tokenValue] = authorization.split(" ");
 
-        User.findByPk(privatekey).then((userkey, nickname) => {
-            res.locals.user = {userkey, nickname};
-            console.log(res.locals.user);
-            next();
-        });
-        return;
-    };
+    const privatekey = jwt.verify(tokenValue, process.env.secret_key);
+    User.findByPk(privatekey.userkey).then((user) => {
+      res.locals.user = user;
+      next();
+    });
+    return;
+  }
 
-    next();
+  next();
 };
