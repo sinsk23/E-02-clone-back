@@ -8,7 +8,6 @@ module.exports = (req, res, next) => {
   if (authorization) {
     return res.status(409).json({
       result: false,
-      do: authorization,
       errormessage: "이미 로그인 중입니다",
     });
   }
