@@ -36,7 +36,7 @@ class UserController {
             });
         };
 
-        let payload = {userId: loginUserData.userId, nickname: loginUserData.nickname};
+        let payload = {userkey: loginUserData.userkey, nickname: loginUserData.nickname};
         const token = jwt.sign(payload, process.env.secret_key, {expiresIn: "1d"});
 
         res.status(200).json({

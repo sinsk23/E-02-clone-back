@@ -7,7 +7,7 @@ class UserRepository {
     }
 
     login = async(userId, password) => {
-        const users = await User.findOne({while: {userid, password}});
+        const users = await User.findOne({while: {userId, password}});
         return users;
     }
 }
