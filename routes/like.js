@@ -1,13 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const { Item, User, Comment, Like } = require("../models");
+const AuthMiddleware = require("../middlewares/auth_middlewares");
 
 // 찜하기(좋아요) 등록, 취소
-router.post("/:itemkey", async (req, res) => {
+router.post("/:itemkey", AuthMiddleware, async (req, res) => {
   try {
-    // const { userkey } = res.locals.user;
-
-    const userkey = 1; // 임시
+    const { userkey } = res.locals.user.userkey;
     const { itemkey } = req.params;
 
     const thisitem = await Item.findOne({ where: { itemkey } });
