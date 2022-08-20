@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const { Item, User, Comment } = require("../models");
+const { Item, User, Comment, Like } = require("../models");
 
 // 숙소 모두 보여주기(메인페이지)(평점 어캐보여주지..)
 router.get("/", async (req, res) => {
   try {
+    const userkey = 1; // 임시
+
     const datas = await Item.findAll({
       include: {
         model: User,
@@ -12,8 +14,10 @@ router.get("/", async (req, res) => {
       },
     });
     // console.log(datas);
-    let sumStar = 0;
-    let avg2 = 0;
+    const likeitems = await Like.findAll({
+      where: { userkey },
+    });
+    // console.log(likeitems);
 
     res.status(200).json({
       data: datas.map((e) => {
@@ -29,9 +33,102 @@ router.get("/", async (req, res) => {
           auth: e.User.nickname,
         };
       }),
+      likes: likeitems.map((i) => {
+        return {
+          itemkey: i.itemkey,
+        };
+      }),
     });
 
+    //새로운 시도
+    // let aaa = datas.map((e) => {
+    //   return {
+    //     itemkey: e.itemkey,
+    //     title: e.title,
+    //     img: e.img,
+    //     content: e.content,
+    //     category: e.category,
+    //     price: e.price,
+    //     location: e.location,
+    //     like: false,
+    //     // star: avg2, // 나중에 배열로 바꿔서 돌려야하는데 흠.. 어렵네 이게
+    //     auth: e.User.nickname,
+    //   };
+    // });
+    // // let ccc = likeitems.map((i) => {
+    // //   return {
+    // //     itemkey: i.itemkey,
+    // //   };
+    // // });
+    // // console.log(ccc);
+    // // if (ccc) {
+
+    // // }
+
+    // let bbb = await Promise.all(
+    //   datas.map(async (e) => {
+    //     const comments = await Comment.findAll({
+    //       where: { itemkey: e.itemkey },
+    //       attributes: ["star"],
+    //     });
+    //     return comments;
+    //   })
+    // );
+    // console.log(bbb);
+
+    // res.status(200).json({
+    //   data: aaa,
+    //   likes: likeitems.map((i) => {
+    //     return {
+    //       itemkey: i.itemkey,
+    //     };
+    //   }),
+    // });
+
     // 후기 평점도 같이 가져오기(아직 안댐)
+    // let sumStar = 0;
+    // let avg2 = 0;
+
+    // res.status(200).json({
+    //   data: datas.map(async (e) => {
+    //     const comments = await Comment.findAll({
+    //       where: { itemkey: e.itemkey },
+    //       attributes: ["star"],
+    //     });
+    //     console.log(comments);
+
+    // sumStar = 0;
+    // avg2 = 0;
+    // if (comments[0] === undefined) {
+    // } else {
+    //   for (let i = 0; i < comments.length; i++) {
+    //     sumStar += comments[i].star;
+    //   }
+    //   avg2 = sumStar / comments.length;
+    // }
+    // console.log(avg2);
+
+    // wait();
+    // console.log(avg2);
+
+    // return {
+    //   itemkey: e.itemkey,
+    //   title: e.title,
+    //   img: e.img,
+    //   content: e.content,
+    //   category: e.category,
+    //   price: e.price,
+    //   location: e.location,
+    //   star: comments, // 나중에 배열로 바꿔서 돌려야하는데 흠.. 어렵네 이게
+    //   auth: e.User.nickname,
+    // };
+    //   }),
+    // });
+
+    // 후기 평점도 같이 가져오기(아직 안댐)
+    // let sumStar = 0;
+    // let avg2 = 0;
+
     // res.status(200).json({
     //   data: datas.map(async (e) => {
     //     const comments = await Comment.findAll({
@@ -146,6 +243,8 @@ router.post("/", async (req, res) => {
 // 숙소 상세 페이지 보여주기
 router.get("/:itemkey", async (req, res) => {
   try {
+    const userkey = 1; // 임시
+
     const { itemkey } = req.params;
     const data = await Item.findOne({
       where: { itemkey },
@@ -161,6 +260,14 @@ router.get("/:itemkey", async (req, res) => {
         errormessage: "해당 숙소를 찾을 수 없습니다.",
       });
       return;
+    }
+
+    const likeitem = await Like.findOne({
+      where: { userkey, itemkey },
+    });
+    let likevalue = false;
+    if (likeitem) {
+      likevalue = true;
     }
 
     const comments = await Comment.findAll({
@@ -188,6 +295,7 @@ router.get("/:itemkey", async (req, res) => {
         price: data.price,
         location: data.location,
         star: avg2,
+        like: likevalue,
         auth: data.User.nickname,
       },
     });
