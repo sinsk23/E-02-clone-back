@@ -13,14 +13,12 @@ router.get("/", VerifyMiddleware, async (req, res) => {
         attributes: ["nickname"],
       },
     });
-    // console.log(datas);
 
     const user = res.locals.user;
     if (user) {
       const likeitems = await Like.findAll({
         where: { userkey: user.userkey },
       });
-      // console.log(likeitems);
 
       res.status(200).json({
         data: datas.map((e) => {
@@ -32,14 +30,12 @@ router.get("/", VerifyMiddleware, async (req, res) => {
             category: e.category,
             price: e.price,
             location: e.location,
-            star: 0, // 나중에 배열로 바꿔서 돌려야하는데 흠.. 어렵네 이게
+            star: 0,
             auth: e.User.nickname,
           };
         }),
         likes: likeitems.map((i) => {
-          return {
-            itemkey: i.itemkey,
-          };
+          return i.itemkey;
         }),
       });
     } else {
@@ -53,7 +49,7 @@ router.get("/", VerifyMiddleware, async (req, res) => {
             category: e.category,
             price: e.price,
             location: e.location,
-            star: 0, // 나중에 배열로 바꿔서 돌려야하는데 흠.. 어렵네 이게
+            star: 0,
             auth: e.User.nickname,
           };
         }),
@@ -61,129 +57,74 @@ router.get("/", VerifyMiddleware, async (req, res) => {
       });
     }
 
-    //새로운 시도
-    // let aaa = datas.map((e) => {
+    // 각 게시물 안에 star 값을 배열로 드릴수 있음
+    // const comments = datas.map((e) => {
+    //   return Comment.findAll({
+    //     where: { itemkey: e.itemkey },
+    //     attributes: ["star", "itemkey"],
+    //   });
+    // });
+
+    // Promise.all(comments).then((value) => {
+    //   res.status(200).json({
+    //     data: datas.map((e, i) => {
+    //       // let aa = value[i].length;
+
+    //       return {
+    //         itemkey: e.itemkey,
+    //         title: e.title,
+    //         img: e.img,
+    //         content: e.content,
+    //         category: e.category,
+    //         price: e.price,
+    //         location: e.location,
+    //         star: value[i],
+    //         auth: e.User.nickname,
+    //       };
+    //     }),
+    //   });
+    // });
+
+    // like 처럼 따로 키 벨류 값으로 드리기
+
+    // const comments = datas.map((e) => {
+    //   return Comment.findAll({
+    //     where: { itemkey: e.itemkey },
+    //     attributes: ["star", "itemkey"],
+    //   });
+    // });
+    // let sumStar = 0;
+    // let avg2 = 0;
+    // Promise.all(comments).then((value) => {
+    //   // console.log(value);
+    //   const arr = value.map((i) => {
+    //     console.log(i);
+    //   });
+
+    //   res.status(200).json({
+    //     ok: false,
+    //   });
+    //   return;
+    // });
+
+    //  sd
+
+    // sumStar = 0;
+    // avg2 = 0;
+    // if (value[i] === []) {
+    // } else {
+    //   for (let i = 0; i < value[i].length; i++) {
+    //     sumStar += value[i].star;
+    //   }
+    //   avg2 = sumStar / value.length;
+    // }
+
+    // const aaa = value.map((e, i) => {
+    //   console.log(e[i]);
     //   return {
     //     itemkey: e.itemkey,
-    //     title: e.title,
-    //     img: e.img,
-    //     content: e.content,
-    //     category: e.category,
-    //     price: e.price,
-    //     location: e.location,
-    //     like: false,
-    //     // star: avg2, // 나중에 배열로 바꿔서 돌려야하는데 흠.. 어렵네 이게
-    //     auth: e.User.nickname,
+    //     star: e.star,
     //   };
-    // });
-    // // let ccc = likeitems.map((i) => {
-    // //   return {
-    // //     itemkey: i.itemkey,
-    // //   };
-    // // });
-    // // console.log(ccc);
-    // // if (ccc) {
-
-    // // }
-
-    // let bbb = await Promise.all(
-    //   datas.map(async (e) => {
-    //     const comments = await Comment.findAll({
-    //       where: { itemkey: e.itemkey },
-    //       attributes: ["star"],
-    //     });
-    //     return comments;
-    //   })
-    // );
-    // console.log(bbb);
-
-    // res.status(200).json({
-    //   data: aaa,
-    //   likes: likeitems.map((i) => {
-    //     return {
-    //       itemkey: i.itemkey,
-    //     };
-    //   }),
-    // });
-
-    // 후기 평점도 같이 가져오기(아직 안댐)
-    // let sumStar = 0;
-    // let avg2 = 0;
-
-    // res.status(200).json({
-    //   data: datas.map(async (e) => {
-    //     const comments = await Comment.findAll({
-    //       where: { itemkey: e.itemkey },
-    //       attributes: ["star"],
-    //     });
-    //     console.log(comments);
-
-    // sumStar = 0;
-    // avg2 = 0;
-    // if (comments[0] === undefined) {
-    // } else {
-    //   for (let i = 0; i < comments.length; i++) {
-    //     sumStar += comments[i].star;
-    //   }
-    //   avg2 = sumStar / comments.length;
-    // }
-    // console.log(avg2);
-
-    // wait();
-    // console.log(avg2);
-
-    // return {
-    //   itemkey: e.itemkey,
-    //   title: e.title,
-    //   img: e.img,
-    //   content: e.content,
-    //   category: e.category,
-    //   price: e.price,
-    //   location: e.location,
-    //   star: comments, // 나중에 배열로 바꿔서 돌려야하는데 흠.. 어렵네 이게
-    //   auth: e.User.nickname,
-    // };
-    //   }),
-    // });
-
-    // 후기 평점도 같이 가져오기(아직 안댐)
-    // let sumStar = 0;
-    // let avg2 = 0;
-
-    // res.status(200).json({
-    //   data: datas.map(async (e) => {
-    //     const comments = await Comment.findAll({
-    //       where: { itemkey: e.itemkey },
-    //       attributes: ["star"],
-    //     });
-    //     console.log(comments);
-
-    // sumStar = 0;
-    // avg2 = 0;
-    // if (comments[0] === undefined) {
-    // } else {
-    //   for (let i = 0; i < comments.length; i++) {
-    //     sumStar += comments[i].star;
-    //   }
-    //   avg2 = sumStar / comments.length;
-    // }
-    // console.log(avg2);
-
-    // wait();
-    // console.log(avg2);
-
-    // return {
-    //   itemkey: e.itemkey,
-    //   title: e.title,
-    //   img: e.img,
-    //   content: e.content,
-    //   category: e.category,
-    //   price: e.price,
-    //   location: e.location,
-    //   star: comments, // 나중에 배열로 바꿔서 돌려야하는데 흠.. 어렵네 이게
-    //   auth: e.User.nickname,
-    // };
-    //   }),
     // });
   } catch (err) {
     console.log(err);
@@ -286,6 +227,7 @@ router.get("/:itemkey", VerifyMiddleware, async (req, res) => {
         sumStar += comments[i].star;
       }
       avg2 = sumStar / comments.length;
+      avg2 = Math.round(avg2 * 10) / 10;
     }
 
     const user = res.locals.user;
