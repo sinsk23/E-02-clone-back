@@ -28,11 +28,15 @@ module.exports = (req, res, next) => {
       });
       return;
     }
-  } catch (error) {
-    res.status(401).json({
-      result: false,
-      errormessage: "로그인 후 사용 가능합니다.",
-    });
-    return;
+  }catch (err) {
+    return res.status(401).json({err:err.message});
+   
   }
+  // } catch (error) {
+  //   res.status(401).json({
+  //     result: false,
+  //     errormessage: "로그인 후 사용 가능합니다.",
+  //   });
+  //   return;
+  // }
 };
