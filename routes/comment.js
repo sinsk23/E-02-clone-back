@@ -11,7 +11,7 @@ router.route('/:itemkey')
 router.route('/:commentkey')
 .put(AuthMiddleware,CommentController.editComment)
 .delete(AuthMiddleware,CommentController.delComment)
-
+.get(AuthMiddleware,CommentController.starPoint)
 
 
 module.exports = router;
