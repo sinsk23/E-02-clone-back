@@ -3,90 +3,65 @@ const router = express.Router();
 const { Item, User, Comment, Like } = require("../models");
 const AuthMiddleware = require("../middlewares/auth_middlewares");
 const VerifyMiddleware = require("../middlewares/verify_middlewares");
+const { Op } = require("sequelize");
 
-// 숙소 모두 보여주기(메인페이지)(평점 어캐보여주지..)
+// 숙소 모두 보여주기(메인페이지)
 router.get("/", VerifyMiddleware, async (req, res) => {
   try {
     const datas = await Item.findAll({
-      include: {
-        model: User,
-        attributes: ["nickname"],
-      },
+      include: [
+        {
+          model: User,
+          attributes: ["nickname"],
+        },
+        {
+          model: Comment,
+          attributes: ["star"],
+        },
+        {
+          model: Like,
+          attributes: ["userkey"],
+        },
+      ],
+      order: [["itemkey", "DESC"]],
+    });
+
+    const arr = datas.map((e) => {
+      return {
+        itemkey: e.itemkey,
+        title: e.title,
+        img: e.img,
+        category: e.category,
+        price: e.price,
+        location: e.location,
+        star: e.Comments,
+        like: e.Likes,
+        auth: e.User.nickname,
+      };
     });
 
     const user = res.locals.user;
     if (user) {
+      // 로그인 했을때 메인에 좋아요 게시물 데이터 주기
       const likeitems = await Like.findAll({
         where: { userkey: user.userkey },
       });
 
       res.status(200).json({
-        data: datas.map((e) => {
-          return {
-            itemkey: e.itemkey,
-            title: e.title,
-            img: e.img,
-            content: e.content,
-            category: e.category,
-            price: e.price,
-            location: e.location,
-            star: 0,
-            auth: e.User.nickname,
-          };
-        }),
         likes: likeitems.map((i) => {
           return i.itemkey;
         }),
+        data: arr,
       });
     } else {
+      // 비로그인이면 메인에 좋아요 게시물 데이터 없음
       res.status(200).json({
-        data: datas.map((e) => {
-          return {
-            itemkey: e.itemkey,
-            title: e.title,
-            img: e.img,
-            content: e.content,
-            category: e.category,
-            price: e.price,
-            location: e.location,
-            star: 0,
-            auth: e.User.nickname,
-          };
-        }),
         likes: [],
+        data: arr,
       });
     }
 
-    // 각 게시물 안에 star 값을 배열로 드릴수 있음
-    // const comments = datas.map((e) => {
-    //   return Comment.findAll({
-    //     where: { itemkey: e.itemkey },
-    //     attributes: ["star", "itemkey"],
-    //   });
-    // });
-
-    // Promise.all(comments).then((value) => {
-    //   res.status(200).json({
-    //     data: datas.map((e, i) => {
-    //       // let aa = value[i].length;
-
-    //       return {
-    //         itemkey: e.itemkey,
-    //         title: e.title,
-    //         img: e.img,
-    //         content: e.content,
-    //         category: e.category,
-    //         price: e.price,
-    //         location: e.location,
-    //         star: value[i],
-    //         auth: e.User.nickname,
-    //       };
-    //     }),
-    //   });
-    // });
-
     // like 처럼 따로 키 벨류 값으로 드리기
-
     // const comments = datas.map((e) => {
     //   return Comment.findAll({
     //     where: { itemkey: e.itemkey },
@@ -97,9 +72,15 @@ router.get("/", VerifyMiddleware, async (req, res) => {
     // let avg2 = 0;
     // Promise.all(comments).then((value) => {
     //   // console.log(value);
-    //   const arr = value.map((i) => {
-    //     console.log(i);
+    //   const arr2 = value.map((i) => {
+    //     console.log(i.itemkey);
+    //     if (i[0]) {
+    //       return { hi: 1 };
+    //     } else {
+    //       return { hi: 2 };
+    //     }
     //   });
+    //   console.log(arr2);
 
     //   res.status(200).json({
     //     ok: false,
@@ -135,6 +116,92 @@ router.get("/", VerifyMiddleware, async (req, res) => {
     return;
   }
 });
+
+// // 네비게이션 테스트
+// router.get("/", VerifyMiddleware, async (req, res) => {
+//   try {
+//     // const page = parseInt(req.query.page);
+//     // const pageSize = parseInt(req.query.pageSize); // 프론트랑 말해서 5로 고정해도됨
+
+//     // let start = 0;
+//     // if (page <= 0) {
+//     //   page = 1;
+//     // } else {
+//     //   start = (page - 1) * pageSize;
+//     // }
+
+//     let where = {};
+//     if (req.query.lastkey) {
+//       // 맨처음 n개 가져오고 이후 스크롤 할때 lastkey을 넣어서 보내줌(그럼 그거보다 작은 애들을 조건으로 함)
+//       const lastkey = parseInt(req.query.lastkey);
+//       where = { itemkey: { [Op.lt]: lastkey } };
+//     }
+
+//     // 처음엔 조건없이 3개 가져오고 이후엔 lastkey 값보다 작은 조건으로 3개 가져옴
+//     const datas = await Item.findAll({
+//       where,
+//       include: [
+//         {
+//           model: User,
+//           attributes: ["nickname"],
+//         },
+//         {
+//           model: Comment,
+//           attributes: ["star"],
+//         },
+//         {
+//           model: Like,
+//           attributes: ["userkey"],
+//         },
+//       ],
+//       order: [["itemkey", "DESC"]],
+//       limit: 3,
+//       // offset: start,
+//     });
+
+//     const arr = datas.map((e) => {
+//       return {
+//         itemkey: e.itemkey,
+//         title: e.title,
+//         img: e.img,
+//         category: e.category,
+//         price: e.price,
+//         location: e.location,
+//         star: e.Comments,
+//         like: e.Likes,
+//         auth: e.User.nickname,
+//       };
+//     });
+
+//     const user = res.locals.user;
+//     if (user) {
+//       // 로그인 했을때 메인에 좋아요 게시물 데이터 주기
+//       const likeitems = await Like.findAll({
+//         where: { userkey: user.userkey },
+//       });
+
+//       res.status(200).json({
+//         likes: likeitems.map((i) => {
+//           return i.itemkey;
+//         }),
+//         data: arr,
+//       });
+//     } else {
+//       // 비로그인이면 메인에 좋아요 게시물 데이터 없음
+//       res.status(200).json({
+//         likes: [],
+//         data: arr,
+//       });
+//     }
+//   } catch (err) {
+//     console.log(err);
+//     res.status(400).json({
+//       result: false,
+//       errormessage: "숙소를 불러오지 못하였습니다",
+//     });
+//     return;
+//   }
+// });
 
 // 숙소 생성하기(미들웨어 적용해야함)
 router.post("/", AuthMiddleware, async (req, res) => {

@@ -18,7 +18,7 @@ router.post("/:itemkey", AuthMiddleware, async (req, res) => {
       });
       return;
     } else {
-      const likeitem = await Like.findOne({ where: { itemkey } });
+      const likeitem = await Like.findOne({ where: { itemkey, userkey } });
 
       if (!likeitem) {
         await Like.create({ userkey, itemkey });
