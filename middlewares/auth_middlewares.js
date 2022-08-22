@@ -24,7 +24,7 @@ module.exports = (req, res, next) => {
     } catch (err) {
       res.status(401).json({
         result: false,
-        errormessage: "유효성 검사에 실패했습니다.",
+        errormessage: "토큰 유효성 검사에 실패했습니다.",
       });
       return;
     }
