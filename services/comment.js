@@ -6,9 +6,8 @@ class CommentService{
     //Service계층 - 댓글생성
     insertComment = async(userkey,itemkey,comment,star)=>{
             
-        console.log("서비스 계층 아이템 키!~~~~~~~~~~~~~~~~~~~~~~~~~~",itemkey);
+        
         const getItemkey = await this.commentRepository.itemkeygetPost(itemkey);
-        console.log("찾은 아이템키 ~~~~~~~~~~~", getItemkey)
         
         
            return await this.commentRepository.insertComment(
@@ -20,11 +19,15 @@ class CommentService{
     //Service계층 - 댓글조회
     getComment = async(itemkey)=>{
         const findComment = await this.commentRepository.commentkeygetComment(itemkey);
-        
-
         return findComment
 
     }
+    getCommentone = async(itemkey)=>{
+        const findComment = await this.commentRepository.itemkeygetComment(itemkey);
+        return findComment
+
+    }
+
 
      //Service계층 - 댓글수정
      editComment = async(userkey,commentkey,comment,star)=>{
@@ -46,9 +49,17 @@ class CommentService{
 
      }
 
+     //Service계층 - 작성자 비교
+     difUserkey = async(userkey,commentkey)=>{
 
+        return await this.commentRepository.difUserkey(userkey,commentkey);
+     }
 
+     //Service - 별점 평균내서 가져오기
+     avgStar = async(commentkey)=>{
 
+        return await this.commentRepository.avgStar(commentkey);
+     }
 
 }
 module.exports = CommentService;

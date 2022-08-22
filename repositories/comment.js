@@ -27,6 +27,12 @@ class CommentRepository{
         const getItem = await Comment.findAll({where : {itemkey}}); 
         return getItem;
     }
+    //저장소~후기(댓글) 게시글의 댓글하나 조회하기
+    itemkeygetComment = async (itemkey) =>{
+        const getItem = await Item.findOne({where : {itemkey}}); 
+        return getItem;
+    }
+
 
     //저장소~후기(댓글) 특정 댓글 조회
     commentkeygetOne = async (commentkey)=>{
@@ -45,6 +51,33 @@ class CommentRepository{
     delComment = async(userkey, commentkey)=>{
         const deleteOne = await Comment.destroy({where:{userkey, commentkey}})
         return deleteOne
+    }
+
+
+    difUserkey = async(userkey,commentkey)=>{
+        //현재 유저키와 게시글의 유저키를 비교
+        const nowUserkey = await User.findOne({where : {userkey}})
+        const postUserkey = await Comment.findOne({where : {commentkey}})
+        console.log("현 유저키 게시물 유저키",nowUserkey.userkey,postUserkey.userkey);
+        if(nowUserkey.userkey!==postUserkey.userkey)
+        return false;
+        else
+        return true;
+    }
+
+    avgStar = async(itemkey)=>{
+        const commentStardata = await Comment.findAll({where:{itemkey},attributes: ["star"]});
+    let sumStar = 0;
+    let avg = 0;
+    if(commentStardata[0] ===undefined){
+    } else{
+        for (let i = 0; i < commentStardata.length; i++) {
+            sumStar += commentStardata[i].star;
+          }
+          avg = sumStar /commentStardata.lenght;
+          avg = Math.round(avg * 10) /10;
+    }
+    return avg;
     }
 
 
