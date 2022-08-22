@@ -6,9 +6,8 @@ class CommentService{
     //Service계층 - 댓글생성
     insertComment = async(userkey,itemkey,comment,star)=>{
             
-        console.log("서비스 계층 아이템 키!~~~~~~~~~~~~~~~~~~~~~~~~~~",itemkey);
+        
         const getItemkey = await this.commentRepository.itemkeygetPost(itemkey);
-        // console.log("찾은 아이템 ~~~~~~~~~~~", getItemkey)
         
         
            return await this.commentRepository.insertComment(
@@ -47,12 +46,10 @@ class CommentService{
      }
 
      //Serive계층 - 작성자 비교
-    //  difUserkey = async(userkey)=>{
+     difUserkey = async(userkey,commentkey)=>{
 
-    //     await this.commentRepository.difUserkey(userkey);
-
-    //     return;
-    //  }
+        return await this.commentRepository.difUserkey(userkey,commentkey);
+     }
 
 
 
