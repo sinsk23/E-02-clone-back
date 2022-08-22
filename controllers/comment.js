@@ -34,7 +34,7 @@ class CommentController{
             star,
         )
         
-        return res.status(201).json({data : commentData}); 
+        return res.status(201).json({data : commentData }); 
         } catch (error) {
             return res.status(401).json({ result : false, errormessage: "댓글 작성에 실패하셨습니다",});
           }
@@ -48,7 +48,7 @@ class CommentController{
       const { itemkey } = req.params;
       const finditemkey = await this.commentRepository.itemkeygetPost(itemkey);
 
-      console.log(finditemkey);
+      
       if (!finditemkey) {
         return res
           .status(400)

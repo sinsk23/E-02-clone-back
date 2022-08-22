@@ -29,7 +29,7 @@ class CommentRepository{
     }
     //저장소~후기(댓글) 게시글의 댓글하나 조회하기
     itemkeygetComment = async (itemkey) =>{
-        const getItem = await Comment.findOne({where : {itemkey}}); 
+        const getItem = await Item.findOne({where : {itemkey}}); 
         return getItem;
     }
 
