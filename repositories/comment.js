@@ -27,6 +27,7 @@ class CommentRepository{
         const getItem = await Comment.findAll({where : {itemkey}}); 
         return getItem;
     }
+    //저장소~후기(댓글) 게시글의 댓글하나 조회하기
     itemkeygetComment = async (itemkey) =>{
         const getItem = await Comment.findOne({where : {itemkey}}); 
         return getItem;
@@ -63,6 +64,22 @@ class CommentRepository{
         else
         return true;
     }
+
+    avgStar = async(itemkey)=>{
+        const commentStardata = await Comment.findAll({where:{itemkey},attributes: ["star"]});
+    let sumStar = 0;
+    let avg = 0;
+    if(commentStardata[0] ===undefined){
+    } else{
+        for (let i = 0; i < commentStardata.length; i++) {
+            sumStar += commentStardata[i].star;
+          }
+          avg = sumStar /commentStardata.lenght;
+          avg = Math.round(avg * 10) /10;
+    }
+    return avg;
+    }
+
 
 }
 

@@ -1,59 +1,46 @@
-const CommentService = require("../services/comment");
-const CommentRepository = require("../repositories/comment");
+const CommentService = require('../services/comment');
+const CommentRepository = require('../repositories/comment');
 
-class CommentController {
-  commentService = new CommentService();
-  commentRepository = new CommentRepository();
+class CommentController{
+    commentService = new CommentService();
+    commentRepository = new CommentRepository();
+     
+    //후기(댓글) 작성하기 /api/comment/:itemkey
+    insertComment = async(req, res, next) =>{
+        try{
+            const regexComment = /^[\s\S]{1,50}$/;//1~50자리수제한
 
-  //후기(댓글) 작성하기 /api/comment/:itemkey
-  insertComment = async (req, res, next) => {
-    try {
-      const regexComment = /^[\s\S]{1,50}$/; //1~50자리수제한
-
-      const { userkey } = res.locals.user.userkey;
-      console.log("유저키~~~~~~~~~~~~~~~~~~~~~~~~~~~", { userkey });
-      const { itemkey } = req.params;
-      const { comment, star } = req.body;
-      //게시글을 찾아 없으면~
-      const findItemkey = await this.commentService.getCommentone(itemkey);
-      if (!findItemkey) {
-        return res
-          .status(400)
-          .json({
-            result: false,
-            errormessage: "댓글을 작성할 게시글이 존재하지 않습니다.",
-          });
+        const {userkey} = res.locals.user.userkey;
+        console.log("유저키~~~~~~~~~~~~~~~~~~~~~~~~~~~",{userkey});
+        const {itemkey} = req.params;
+        const {comment, star} = req.body;
+       //게시글을 찾아 없으면~
+       const findItemkey = await this.commentService.getCommentone(itemkey);
+        if(!findItemkey){
+            return res.status(400).json({result:false, errormessage:'댓글을 작성할 게시글이 존재하지 않습니다.'})
         //댓글 내용이 없으면~
-      }
-      if (comment === "" || null) {
-        return res
-          .status(400)
-          .json({ result: false, message: "댓글을 입력해주세요" });
-      }
-      // 댓글 글자수 제한을 넘었을시~
-      if (!isRegexValidation(comment, regexComment)) {
-        return res
-          .status(412)
-          .json({
-            result: false,
-            errorMessage: "댓글 형식이 일치하지 않습니다.",
-          });
-      }
+        }if(comment === ""||null){
+            return res.status(400).json({ result: false, message: '댓글을 입력해주세요'})
+        }
+        // 댓글 글자수 제한을 넘었을시~ 
+        if (!isRegexValidation(comment, regexComment)) {
+            return res.status(412).json({ result: false, errorMessage: '댓글 형식이 일치하지 않습니다.'});}
 
-      const commentData = await this.commentService.insertComment(
-        userkey,
-        itemkey,
-        comment,
-        star
-      );
 
-      return res.status(201).json({ data: commentData });
-    } catch (error) {
-      return res
-        .status(401)
-        .json({ result: false, errormessage: "댓글 작성에 실패하셨습니다" });
+        const commentData = await this.commentService.insertComment(
+            userkey,
+            itemkey,
+            comment,
+            star,
+        )
+        
+        return res.status(201).json({data : commentData}); 
+        } catch (error) {
+            return res.status(401).json({ result : false, errormessage: "댓글 작성에 실패하셨습니다",});
+          }
+
     }
-  };
+
 
   //후기(댓글) 불러오기(조회) /api/comment/:itemkey
   getComment = async (req, res, next) => {
@@ -119,6 +106,7 @@ class CommentController {
           });
       }
 
+
       await this.commentService.editComment(userkey, commentkey, comment, star);
 
       return res
@@ -176,13 +164,16 @@ class CommentController {
     }
   };
 
-  //별점 불러오기 '/api/commen/:commentkey' // 각 댓글의 별점을 합쳐서 평균으로 보여주기
-  starPoint = async (req, res, nesxt) => {
-    // const {userkey} = res.locals.user.userkey;
-    // const {commentkey} = res.params;
-    // const
-  };
+//   //별점 불러오기 '/api/commen/:commentkey' // 각 댓글의 별점을 합쳐서 평균으로 보여주기
+//   starPoint = async (req, res, nesxt) => {
+//     // const {userkey} = res.locals.user.userkey;
+//     // const {commentkey} = res.params;
+//     // const
+//   };
 }
+
+
+
 //target = comment , regex = regexComment  검사할 target 정규표현식 regex
 //유효성 판별   .serch 실패한검색-1 성공한검색 양수값
 function isRegexValidation(target, regex) {

@@ -49,13 +49,17 @@ class CommentService{
 
      }
 
-     //Serive계층 - 작성자 비교
+     //Service계층 - 작성자 비교
      difUserkey = async(userkey,commentkey)=>{
 
         return await this.commentRepository.difUserkey(userkey,commentkey);
      }
 
+     //Service - 별점 평균내서 가져오기
+     avgStar = async(commentkey)=>{
 
+        return await this.commentRepository.avgStar(commentkey);
+     }
 
 }
 module.exports = CommentService;
