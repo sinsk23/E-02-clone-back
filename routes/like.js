@@ -22,16 +22,32 @@ router.post("/:itemkey", AuthMiddleware, async (req, res) => {
 
       if (!likeitem) {
         await Like.create({ userkey, itemkey });
+        const userlike = await Like.findAll({
+          where: { userkey },
+          attributes: ["itemkey"],
+        });
+        console.log(userlike);
         res.status(200).json({
           result: true,
           message: "찜하기 등록",
+          like: userlike.map((e) => {
+            return e.itemkey;
+          }),
         });
         return;
       } else {
         await Like.destroy({ where: { userkey, itemkey } });
+        const userlike = await Like.findAll({
+          where: { userkey },
+          attributes: ["itemkey"],
+        });
+        console.log(userlike);
         res.status(200).json({
           result: true,
           message: "찜하기 취소",
+          like: userlike.map((e) => {
+            return e.itemkey;
+          }),
         });
         return;
       }
