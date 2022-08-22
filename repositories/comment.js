@@ -27,6 +27,11 @@ class CommentRepository{
         const getItem = await Comment.findAll({where : {itemkey}}); 
         return getItem;
     }
+    itemkeygetComment = async (itemkey) =>{
+        const getItem = await Comment.findOne({where : {itemkey}}); 
+        return getItem;
+    }
+
 
     //저장소~후기(댓글) 특정 댓글 조회
     commentkeygetOne = async (commentkey)=>{

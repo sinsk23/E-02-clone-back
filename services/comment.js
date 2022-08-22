@@ -19,11 +19,15 @@ class CommentService{
     //Service계층 - 댓글조회
     getComment = async(itemkey)=>{
         const findComment = await this.commentRepository.commentkeygetComment(itemkey);
-        
-
         return findComment
 
     }
+    getCommentone = async(itemkey)=>{
+        const findComment = await this.commentRepository.itemkeygetComment(itemkey);
+        return findComment
+
+    }
+
 
      //Service계층 - 댓글수정
      editComment = async(userkey,commentkey,comment,star)=>{
