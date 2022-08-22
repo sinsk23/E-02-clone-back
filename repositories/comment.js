@@ -48,6 +48,14 @@ class CommentRepository{
     }
 
 
+    // difUserkey = async(userkey)=>{
+    //     //현재 유저키와 게시글의 유저키를 비교
+    //     const nowUserkey = await User.findOne({where : {userkey}})
+    //     const postUserkey = await Item.findOne({where : {userkey}})
+    //     if(nowUserkey.userkey!==postUserkey.userkey)
+    //     return false
+    // }
+
 }
 
 module.exports = CommentRepository;
