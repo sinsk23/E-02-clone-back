@@ -22,6 +22,7 @@ class CommentService{
         return findComment
 
     }
+    
     getCommentone = async(itemkey)=>{
         const findComment = await this.commentRepository.itemkeygetComment(itemkey);
         return findComment
@@ -56,10 +57,12 @@ class CommentService{
      }
 
      //Service - 별점 평균내서 가져오기
-     avgStar = async(commentkey)=>{
+     avgStar = async(itemkey)=>{
 
-        return await this.commentRepository.avgStar(commentkey);
+        return await this.commentRepository.avgStar(itemkey);
      }
+     //Service - 커뮤니티 가져오기
+     
 
 }
 module.exports = CommentService;
