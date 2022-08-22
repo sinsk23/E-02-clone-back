@@ -8,5 +8,6 @@ const userController = new UserController();
 
 router.post("/join", DuplicateLoginCheckMiddleware, userController.createUser);
 router.post("/login", DuplicateLoginCheckMiddleware, userController.login);
+router.get("/check", userController.duplicateCheck);
 
 module.exports = router;

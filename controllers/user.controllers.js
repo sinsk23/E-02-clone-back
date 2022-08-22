@@ -25,7 +25,7 @@ class UserController {
 
     res.status(200).json({
       result: true,
-      message: "회원 가입에 성공하였습니다.",
+      Message: "회원 가입에 성공하였습니다.",
     });
   };
 
@@ -37,7 +37,7 @@ class UserController {
     if (!loginUserData) {
       res.status(400).json({
         result: false,
-        errormessage: "로그인에 실패하였습니다",
+        errorMessage: "로그인에 실패하였습니다",
       });
       return;
     }
@@ -54,9 +54,27 @@ class UserController {
     res.status(200).json({
       result: true,
       token: token,
-      message: "로그인에 성공하였습니다",
+      Message: "로그인에 성공하였습니다",
     });
   };
-}
+
+  duplicateCheck = async(req, res, next) => {
+    const {key, value} = req.body;
+
+    const duplicateCheckData = await this.userService.duplicateCheck(key, value);
+
+    if(!duplicateCheckData){
+      return res.status(200).json({
+        ok: true,
+        Message: key + "이(가) 중복이 아닙니다"
+      });
+    };
+
+    res.status(400).json({
+      ok: false, 
+      errorMessage: key + "이(가) 중복입니다"
+    });
+  };
+};
 
 module.exports = UserController;

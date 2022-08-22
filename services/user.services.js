@@ -23,5 +23,20 @@ class UserService{
 
         };
     };
+    duplicateCheck = async(key, value) => {
+        let duplicateCheckData;
+        
+        if(key === "userId"){
+            duplicateCheckData = await this.userRepository.duplicateCheck_userId(value);
+        }
+        if(key === "nickname"){
+            duplicateCheckData = await this.userRepository.duplicateCheck_nickname(value);
+        }
+        if(key === "email"){
+            duplicateCheckData = await this.userRepository.duplicateCheck_email(value);
+        }
+
+        return duplicateCheckData;
+    };
 };
 module.exports = UserService;
