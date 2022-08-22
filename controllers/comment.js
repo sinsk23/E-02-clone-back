@@ -1,24 +1,34 @@
 const CommentService = require('../services/comment');
+const CommentRepository = require('../repositories/comment');
+
 
 class CommentController{
     commentService = new CommentService();
-    
-
+    commentRepository = new CommentRepository();
+     //에러 검출 코드
+        // return res.status(401).json({err:err.message});
     //후기(댓글) 작성하기 /api/comment/:itemkey
     insertComment = async(req, res, next) =>{
         try{
+            const regexComment = /^[\s\S]{1,50}$/;//1~50자리수제한
+
         const {userkey} = res.locals.user.userkey;
         console.log("유저키~~~~~~~~~~~~~~~~~~~~~~~~~~~",{userkey});
         const {itemkey} = req.params;
         const {comment, star} = req.body;
-       //게시글이 없으면~
-        if(!itemkey){
+       //게시글을 찾아 없으면~
+       const findItemkey = await this.commentService.getComment(itemkey);
+        if(!findItemkey){
             return res.status(400).json({result:false, errormessage:'댓글을 작성할 게시글이 존재하지 않습니다.'})
         //댓글 내용이 없으면~
-        }else if(comment === undefined){
+        }if(comment === ""||null){
             return res.status(400).json({ result: false, message: '댓글을 입력해주세요'})
-        } 
-        
+        }
+        // 댓글 글자수 제한을 넘었을시~ 
+        if (!isRegexValidation(comment, regexComment)) {
+            return res.status(412).json({ result: false, errorMessage: '댓글 형식이 일치하지 않습니다.'});}
+
+
         const commentData = await this.commentService.insertComment(
             userkey,
             itemkey,
@@ -26,8 +36,8 @@ class CommentController{
             star,
         )
         
-        return res.status(201).json({data : commentData});
-        }catch (error) {
+        return res.status(201).json({data : commentData}); 
+        } catch (error) {
             console.log(`${req.method} ${req.originalUrl} : ${error.message}`);
             return res.status(401).json({ result : false,
                 errormessage: "댓글 작성에 실패하셨습니다",
@@ -35,16 +45,17 @@ class CommentController{
           }
 
 
-        //에러 검출후 완료시 밑 코드랑 내용 바꾸기
-        // return res.status(401).json({err:err.message});
-        // 
+       
+         
     }
 
     //후기(댓글) 불러오기(조회) /api/comment/:itemkey
     getComment = async(req, res, next) =>{
      try{
      const {itemkey} = req.params;
-     if(!itemkey){
+     const finditemkey = await this.commentRepository.itemkeygetPost(itemkey);
+     console.log("찾은 아이템키",finditemkey.itemkey)
+     if(finditemkey.itemkey===null){
             return res.status(400).json({ result: false, errormessage: "댓글을 불러오지 못하였습니다."})
         }
 
@@ -52,10 +63,8 @@ class CommentController{
      return res.status(201).json({data : [commentData]});
 
     }catch (error) {
-        console.log(`${req.method} ${req.originalUrl} : ${error.message}`);
-        return res.status(400).json({ result : false,
-            errormessage: "댓글을 불러오지 못했습니다.",
-        });
+        return res.status(400).json({ result: false, errormessage: "댓글을 불러오지 못하였습니다."})
+        
       }
 
     }
@@ -66,8 +75,16 @@ class CommentController{
         const {userkey} = res.locals.user.userkey;
         const {commentkey}= req.params;
         const {comment ,star} = req.body;
-        if(!commentkey){
+        const findcommentkey = await this.commentRepository.commentkeygetOne(commentkey);
+        if(!findcommentkey){
             return res.status(400).json({ result: false, errormessage: '수정 할 댓글이 존재하지 않습니다.'});
+        }
+        //작성자가 다르면(userkey가 다르면)
+        
+        const difuserkey = await this.commentService.difUserkey(userkey,commentkey);
+        // console.log(difuserkey);
+        if(difuserkey===false){
+            return res.status(400).json({ result: false, errormessage: '작성자가 달라 수정 할 수 없습니다.'})
         }
 
 
@@ -96,6 +113,13 @@ class CommentController{
         const { userkey } = res.locals.user.userkey;
         const { commentkey } = req.params;
         
+        const difuserkey = await this.commentService.difUserkey(userkey,commentkey);
+        // console.log(difuserkey);
+        if(difuserkey===false){
+            return res.status(400).json({ result: false, errormessage: '작성자가 달라 삭제 할 수 없습니다.'})
+        }
+
+
         await this.commentService.delComment(
             userkey,commentkey
         )
@@ -121,6 +145,13 @@ class CommentController{
     }
 
 
+    
+
 }
+//target = comment , regex = regexComment  검사할 target 정규표현식 regex
+//유효성 판별   .serch 실패한검색-1 성공한검색 양수값 
+function isRegexValidation(target, regex) {
+    return target.search(regex) !== -1;//실패하지 않았을시~
+  }
 
 module.exports = CommentController;
