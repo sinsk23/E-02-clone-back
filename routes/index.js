@@ -8,7 +8,7 @@ const commentRouter = require("./comment");
 
 //swagger modules import
 const { swaggerUi, specs } = require('../modules/swagger')
-//  경로 /api/ 
+//  경로 /api/swagger 
 router.use('/swagger', swaggerUi.serve, swaggerUi.setup(specs));
 
 

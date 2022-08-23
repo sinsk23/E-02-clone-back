@@ -7,7 +7,7 @@ const options = {
     swaggerDefinition:{
         info:{
             title : 'Test API AirB&B',
-            version : '1.1.0',
+            version : '1.0.0',
             description : `<br>'AirB&B 의 API입니다'<br/>` 
         },
         host : 'localhost:3000',
@@ -15,10 +15,11 @@ const options = {
     },
     //내가 설정한 api들을 스웨거가 찾도록 명시
     apis: [
-        './routes/comment.js',
-        './routes/item.js',
-        './routes/like.js',
-        './routes/user.js'
+        // './routes/comment.js',
+        // './routes/item.js',
+        // './routes/like.js',
+        // './routes/user.js'
+        './routes/*.js'
     ],
 };
 
