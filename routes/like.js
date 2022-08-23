@@ -61,4 +61,45 @@ router.post("/:itemkey", AuthMiddleware, async (req, res) => {
   }
 });
 
+// 위시리스트 보여주기(찜한것들)
+router.get("/", AuthMiddleware, async (req, res) => {
+  try {
+    const { userkey } = res.locals.user.userkey;
+
+    const datas = await Like.findAll({
+      include: [
+        {
+          model: Item,
+        },
+      ],
+      order: [["itemkey", "DESC"]],
+      where: { userkey },
+    });
+
+    const arr = datas.map((e) => {
+      return e.Item;
+    });
+
+    const arr2 = arr.map((e) => {
+      return {
+        itemkey: e.itemkey,
+        title: e.title,
+        img: e.img,
+      };
+    });
+
+    res.status(200).json({
+      data: arr2,
+    });
+    return;
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({
+      result: false,
+      errormessage: "위시리스트를 불러오지 못했습니다.",
+    });
+    return;
+  }
+});
+
 module.exports = router;

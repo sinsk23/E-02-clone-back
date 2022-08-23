@@ -53,12 +53,14 @@ router.get("/", VerifyMiddleware, async (req, res) => {
         }),
         data: arr,
       });
+      return;
     } else {
       // 비로그인이면 메인에 좋아요 게시물 데이터 없음
       res.status(200).json({
         likes: [],
         data: arr,
       });
+      return;
     }
   } catch (err) {
     console.log(err);
@@ -462,6 +464,82 @@ router.delete("/:itemkey", AuthMiddleware, async (req, res) => {
     res.status(400).json({
       result: false,
       errormessage: "숙소 삭제에 실패하였습니다.",
+    });
+    return;
+  }
+});
+
+// 검색 기능(제목, 위치)
+router.get("/search/:searchWord", VerifyMiddleware, async (req, res) => {
+  try {
+    const { searchWord } = req.params;
+
+    const datas = await Item.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ["nickname"],
+        },
+        {
+          model: Comment,
+          attributes: ["star"],
+        },
+        {
+          model: Like,
+          attributes: ["userkey"],
+        },
+      ],
+      order: [["itemkey", "DESC"]],
+      where: {
+        [Op.or]: [
+          { title: { [Op.like]: `%${searchWord}%` } },
+          { location: { [Op.like]: `%${searchWord}%` } },
+        ],
+      },
+    });
+    // console.log(datas.length);
+
+    const arr = datas.map((e) => {
+      return {
+        itemkey: e.itemkey,
+        title: e.title,
+        img: e.img,
+        category: e.category,
+        price: e.price,
+        location: e.location,
+        star: e.Comments,
+        like: e.Likes,
+        auth: e.User.nickname,
+      };
+    });
+
+    const user = res.locals.user;
+    if (user) {
+      // 로그인 했을때 메인에 좋아요 게시물 데이터 주기
+      const likeitems = await Like.findAll({
+        where: { userkey: user.userkey },
+      });
+
+      res.status(200).json({
+        likes: likeitems.map((i) => {
+          return i.itemkey;
+        }),
+        data: arr,
+      });
+      return;
+    } else {
+      // 비로그인이면 메인에 좋아요 게시물 데이터 없음
+      res.status(200).json({
+        likes: [],
+        data: arr,
+      });
+      return;
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({
+      result: false,
+      errormessage: "검색에 실패했습니다.",
     });
     return;
   }
