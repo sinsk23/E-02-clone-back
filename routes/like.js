@@ -103,3 +103,74 @@ router.get("/", AuthMiddleware, async (req, res) => {
 });
 
 module.exports = router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * @swagger
+ *  /api/{itemkey}:
+ *    post:
+ *      tags:
+ *      - Like
+ *      description: 찜하기(좋아요) 등록, 취소
+ *      operationId : itemkey
+ *      parameters:
+ *      - in: "body"
+ *        name: "itemkey"
+ *        description: 찜하기(좋아요) 등록, 취소 
+ *        required: true
+ *        schema:
+ *          type: object
+ *          properties:
+ *            likekey:
+ *              type: integer
+ *              example: '1'
+ *            userkey:
+ *              type: integer
+ *              example: '1'
+ *            itemkey:
+ *              type: integer
+ *              example: '1'
+ * 
+ *      responses:
+ *        200-1:
+ *          description: "찜하기 등록"
+ *        200-2:
+ *          description: "찜하기 취소"
+ *        400-1:
+ *          description: "해당 숙소를 찾을 수 없습니다."
+ *        400-2:
+ *          description: "찜하기 기능에 에러가 발생했습니다."
+ */
