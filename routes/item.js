@@ -60,53 +60,6 @@ router.get("/", VerifyMiddleware, async (req, res) => {
         data: arr,
       });
     }
-
-    // like 처럼 따로 키 벨류 값으로 드리기
-    // const comments = datas.map((e) => {
-    //   return Comment.findAll({
-    //     where: { itemkey: e.itemkey },
-    //     attributes: ["star", "itemkey"],
-    //   });
-    // });
-    // let sumStar = 0;
-    // let avg2 = 0;
-    // Promise.all(comments).then((value) => {
-    //   // console.log(value);
-    //   const arr2 = value.map((i) => {
-    //     console.log(i.itemkey);
-    //     if (i[0]) {
-    //       return { hi: 1 };
-    //     } else {
-    //       return { hi: 2 };
-    //     }
-    //   });
-    //   console.log(arr2);
-
-    //   res.status(200).json({
-    //     ok: false,
-    //   });
-    //   return;
-    // });
-
-    //  sd
-
-    // sumStar = 0;
-    // avg2 = 0;
-    // if (value[i] === []) {
-    // } else {
-    //   for (let i = 0; i < value[i].length; i++) {
-    //     sumStar += value[i].star;
-    //   }
-    //   avg2 = sumStar / value.length;
-    // }
-
-    // const aaa = value.map((e, i) => {
-    //   console.log(e[i]);
-    //   return {
-    //     itemkey: e.itemkey,
-    //     star: e.star,
-    //   };
-    // });
   } catch (err) {
     console.log(err);
     res.status(400).json({
