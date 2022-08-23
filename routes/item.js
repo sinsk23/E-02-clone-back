@@ -34,6 +34,10 @@ router.get("/", VerifyMiddleware, async (req, res) => {
         category: e.category,
         price: e.price,
         location: e.location,
+        itemType: e.itemType,
+        itemSize: e.itemSize,
+        guestRoom: e.guestRoom,
+        convenience: e.convenience,
         star: e.Comments,
         like: e.Likes,
         auth: e.User.nickname,
@@ -120,6 +124,10 @@ router.get("/", VerifyMiddleware, async (req, res) => {
 //         category: e.category,
 //         price: e.price,
 //         location: e.location,
+// itemType: e.itemType,
+// itemSize: e.itemSize,
+// guestRoom: e.guestRoom,
+// convenience: e.convenience,
 //         star: e.Comments,
 //         like: e.Likes,
 //         auth: e.User.nickname,
@@ -161,7 +169,18 @@ router.post("/", AuthMiddleware, async (req, res) => {
   try {
     const { userkey } = res.locals.user.userkey;
 
-    const { title, img, content, category, price, location } = req.body;
+    const {
+      title,
+      img,
+      content,
+      category,
+      price,
+      location,
+      itemType,
+      itemSize,
+      guestRoom,
+      convenience,
+    } = req.body;
 
     if (
       title === "" ||
@@ -169,7 +188,11 @@ router.post("/", AuthMiddleware, async (req, res) => {
       category === "" ||
       content === "" ||
       price === "" ||
-      location === ""
+      location === "" ||
+      itemType === "" ||
+      itemSize === "" ||
+      guestRoom === "" ||
+      convenience === ""
     ) {
       res.status(400).json({
         result: false,
@@ -186,6 +209,10 @@ router.post("/", AuthMiddleware, async (req, res) => {
       price,
       location,
       userkey,
+      itemType,
+      itemSize,
+      guestRoom,
+      convenience,
     });
 
     const nic = await User.findOne({ where: { userkey: item.userkey } });
@@ -199,6 +226,10 @@ router.post("/", AuthMiddleware, async (req, res) => {
         category: item.category,
         price: item.price,
         location: item.location,
+        itemType: item.itemType,
+        itemSize: item.itemSize,
+        guestRoom: item.guestRoom,
+        convenience: item.convenience,
         star: 0,
         auth: nic.nickname,
       },
@@ -270,6 +301,10 @@ router.get("/:itemkey", VerifyMiddleware, async (req, res) => {
           category: data.category,
           price: data.price,
           location: data.location,
+          itemType: data.itemType,
+          itemSize: data.itemSize,
+          guestRoom: data.guestRoom,
+          convenience: data.convenience,
           star: avg2,
           like: likevalue,
           auth: data.User.nickname,
@@ -286,6 +321,10 @@ router.get("/:itemkey", VerifyMiddleware, async (req, res) => {
           category: data.category,
           price: data.price,
           location: data.location,
+          itemType: data.itemType,
+          itemSize: data.itemSize,
+          guestRoom: data.guestRoom,
+          convenience: data.convenience,
           star: avg2,
           like: false,
           auth: data.User.nickname,
@@ -309,7 +348,18 @@ router.put("/:itemkey", AuthMiddleware, async (req, res) => {
     const { userkey } = res.locals.user.userkey;
 
     const { itemkey } = req.params;
-    const { title, img, content, category, price, location } = req.body;
+    const {
+      title,
+      img,
+      content,
+      category,
+      price,
+      location,
+      itemType,
+      itemSize,
+      guestRoom,
+      convenience,
+    } = req.body;
 
     if (
       title === "" ||
@@ -317,7 +367,11 @@ router.put("/:itemkey", AuthMiddleware, async (req, res) => {
       category === "" ||
       content === "" ||
       price === "" ||
-      location === ""
+      location === "" ||
+      itemType === "" ||
+      itemSize === "" ||
+      guestRoom === "" ||
+      convenience === ""
     ) {
       res.status(400).json({
         result: false,
@@ -346,6 +400,10 @@ router.put("/:itemkey", AuthMiddleware, async (req, res) => {
             category,
             price,
             location,
+            itemType,
+            itemSize,
+            guestRoom,
+            convenience,
           },
           { where: { itemkey } }
         );
