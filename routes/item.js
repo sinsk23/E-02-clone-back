@@ -63,7 +63,7 @@ router.get("/", VerifyMiddleware, async (req, res) => {
       return;
     }
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     res.status(400).json({
       result: false,
       errormessage: "숙소를 불러오지 못하였습니다",
