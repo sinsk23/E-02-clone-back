@@ -137,7 +137,7 @@ class CommentController {
       if (!findcommentkey) {
         return res.status(400).json({
           result: false,
-          errormessage: "수정 할 댓글이 존재하지 않습니다.",
+          errormessage: "삭제 할 댓글이 존재하지 않습니다.",
         });
       }
 
