@@ -60,53 +60,6 @@ router.get("/", VerifyMiddleware, async (req, res) => {
         data: arr,
       });
     }
-
-    // like 처럼 따로 키 벨류 값으로 드리기
-    // const comments = datas.map((e) => {
-    //   return Comment.findAll({
-    //     where: { itemkey: e.itemkey },
-    //     attributes: ["star", "itemkey"],
-    //   });
-    // });
-    // let sumStar = 0;
-    // let avg2 = 0;
-    // Promise.all(comments).then((value) => {
-    //   // console.log(value);
-    //   const arr2 = value.map((i) => {
-    //     console.log(i.itemkey);
-    //     if (i[0]) {
-    //       return { hi: 1 };
-    //     } else {
-    //       return { hi: 2 };
-    //     }
-    //   });
-    //   console.log(arr2);
-
-    //   res.status(200).json({
-    //     ok: false,
-    //   });
-    //   return;
-    // });
-
-    //  sd
-
-    // sumStar = 0;
-    // avg2 = 0;
-    // if (value[i] === []) {
-    // } else {
-    //   for (let i = 0; i < value[i].length; i++) {
-    //     sumStar += value[i].star;
-    //   }
-    //   avg2 = sumStar / value.length;
-    // }
-
-    // const aaa = value.map((e, i) => {
-    //   console.log(e[i]);
-    //   return {
-    //     itemkey: e.itemkey,
-    //     star: e.star,
-    //   };
-    // });
   } catch (err) {
     console.log(err);
     res.status(400).json({
@@ -167,6 +120,10 @@ router.get("/", VerifyMiddleware, async (req, res) => {
 //         category: e.category,
 //         price: e.price,
 //         location: e.location,
+// itemType: e.itemType,
+// itemSize: e.itemSize,
+// guestRoom: e.guestRoom,
+// convenience: e.convenience,
 //         star: e.Comments,
 //         like: e.Likes,
 //         auth: e.User.nickname,
@@ -208,7 +165,18 @@ router.post("/", AuthMiddleware, async (req, res) => {
   try {
     const { userkey } = res.locals.user.userkey;
 
-    const { title, img, content, category, price, location } = req.body;
+    const {
+      title,
+      img,
+      content,
+      category,
+      price,
+      location,
+      itemType,
+      itemSize,
+      guestRoom,
+      convenience,
+    } = req.body;
 
     if (
       title === "" ||
@@ -216,7 +184,11 @@ router.post("/", AuthMiddleware, async (req, res) => {
       category === "" ||
       content === "" ||
       price === "" ||
-      location === ""
+      location === "" ||
+      itemType === "" ||
+      itemSize === "" ||
+      guestRoom === "" ||
+      convenience === ""
     ) {
       res.status(400).json({
         result: false,
@@ -233,6 +205,10 @@ router.post("/", AuthMiddleware, async (req, res) => {
       price,
       location,
       userkey,
+      itemType,
+      itemSize,
+      guestRoom,
+      convenience,
     });
 
     const nic = await User.findOne({ where: { userkey: item.userkey } });
@@ -246,6 +222,10 @@ router.post("/", AuthMiddleware, async (req, res) => {
         category: item.category,
         price: item.price,
         location: item.location,
+        itemType: item.itemType,
+        itemSize: item.itemSize,
+        guestRoom: item.guestRoom,
+        convenience: item.convenience,
         star: 0,
         auth: nic.nickname,
       },
@@ -317,6 +297,10 @@ router.get("/:itemkey", VerifyMiddleware, async (req, res) => {
           category: data.category,
           price: data.price,
           location: data.location,
+          itemType: data.itemType,
+          itemSize: data.itemSize,
+          guestRoom: data.guestRoom,
+          convenience: data.convenience,
           star: avg2,
           like: likevalue,
           auth: data.User.nickname,
@@ -333,6 +317,10 @@ router.get("/:itemkey", VerifyMiddleware, async (req, res) => {
           category: data.category,
           price: data.price,
           location: data.location,
+          itemType: data.itemType,
+          itemSize: data.itemSize,
+          guestRoom: data.guestRoom,
+          convenience: data.convenience,
           star: avg2,
           like: false,
           auth: data.User.nickname,
@@ -356,7 +344,18 @@ router.put("/:itemkey", AuthMiddleware, async (req, res) => {
     const { userkey } = res.locals.user.userkey;
 
     const { itemkey } = req.params;
-    const { title, img, content, category, price, location } = req.body;
+    const {
+      title,
+      img,
+      content,
+      category,
+      price,
+      location,
+      itemType,
+      itemSize,
+      guestRoom,
+      convenience,
+    } = req.body;
 
     if (
       title === "" ||
@@ -364,7 +363,11 @@ router.put("/:itemkey", AuthMiddleware, async (req, res) => {
       category === "" ||
       content === "" ||
       price === "" ||
-      location === ""
+      location === "" ||
+      itemType === "" ||
+      itemSize === "" ||
+      guestRoom === "" ||
+      convenience === ""
     ) {
       res.status(400).json({
         result: false,
@@ -393,6 +396,10 @@ router.put("/:itemkey", AuthMiddleware, async (req, res) => {
             category,
             price,
             location,
+            itemType,
+            itemSize,
+            guestRoom,
+            convenience,
           },
           { where: { itemkey } }
         );
