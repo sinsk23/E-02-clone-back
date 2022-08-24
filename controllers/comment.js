@@ -173,7 +173,7 @@ class CommentController {
     const avgStardata = await this.commentService.avgStar(itemkey);
 
     const commentData = await this.commentService.getComment(itemkey);
-
+    
     console.log(avgStardata);
     console.log(commentData);
     res.status(201).json({

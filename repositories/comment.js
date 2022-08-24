@@ -12,12 +12,10 @@ class CommentRepository{
 
     //저장소~ 후기(댓글) 작성하기
     insertComment = async (userkey,itemkey,comment, star)=>{
-        console.log("repo쪽 값확인",userkey,itemkey,comment,star);
+        
         const commentData = await Comment.create({
             userkey,itemkey, comment, star
         })
-
-        console.log("~~~~~~~댓글 레포 생성부분~~~~~~~~");
 
         return commentData;
     }
@@ -38,6 +36,9 @@ class CommentRepository{
                 comment: s.comment,
                 userkey: s.userkey,
                 itemkey: s.itemkey,
+                star : s.star,
+                createdAt: s.createdAt,
+                updatedAt: s.updatedAt,
                 nickname: s.User.nickname,
 
             };
@@ -76,7 +77,7 @@ class CommentRepository{
         //현재 유저키와 게시글의 유저키를 비교
         const nowUserkey = await User.findOne({where : {userkey}})
         const postUserkey = await Comment.findOne({where : {commentkey}})
-        console.log("현 유저키 게시물 유저키",nowUserkey.userkey,postUserkey.userkey);
+        // console.log("현 유저키 게시물 유저키",nowUserkey.userkey,postUserkey.userkey);
         if(nowUserkey.userkey!==postUserkey.userkey)
         return false;
         else
