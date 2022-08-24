@@ -34,6 +34,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.JSON,
         defaultValue: [],
       },
+      itemType: DataTypes.STRING,
+      itemSize: DataTypes.STRING,
+      guestRoom: {
+        type: DataTypes.JSON,
+      },
+      convenience: {
+        type: DataTypes.JSON,
+        defaultValue: [],
+      },
     },
     {
       sequelize,

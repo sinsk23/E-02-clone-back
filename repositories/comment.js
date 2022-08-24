@@ -66,18 +66,24 @@ class CommentRepository{
     }
 
     avgStar = async(itemkey)=>{
+       
         const commentStardata = await Comment.findAll({where:{itemkey},attributes: ["star"]});
+        // console.log(commentStardata)
     let sumStar = 0;
-    let avg = 0;
+    let avg2 = 0;
+    // console.log(commentStardata[0])
     if(commentStardata[0] ===undefined){
     } else{
         for (let i = 0; i < commentStardata.length; i++) {
             sumStar += commentStardata[i].star;
           }
-          avg = sumStar /commentStardata.lenght;
-          avg = Math.round(avg * 10) /10;
+        //   console.log(sumStar);
+          avg2 = sumStar /commentStardata.length;
+        //   console.log(avg2)
+          avg2 = Math.round(avg2 * 10) /10;
     }
-    return avg;
+    // console.log(avg2)
+    return avg2;
     }
 
 

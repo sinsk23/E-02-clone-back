@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       content: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(1000),
       },
       category: {
         type: Sequelize.STRING,
@@ -24,6 +24,19 @@ module.exports = {
         type: Sequelize.STRING,
       },
       img: {
+        type: Sequelize.JSON,
+        defaultValue: [],
+      },
+      itemType: {
+        type: Sequelize.STRING,
+      },
+      itemSize: {
+        type: Sequelize.STRING,
+      },
+      guestRoom: {
+        type: Sequelize.JSON,
+      },
+      convenience: {
         type: Sequelize.JSON,
         defaultValue: [],
       },

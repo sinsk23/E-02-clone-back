@@ -53,62 +53,17 @@ router.get("/", VerifyMiddleware, async (req, res) => {
         }),
         data: arr,
       });
+      return;
     } else {
       // 비로그인이면 메인에 좋아요 게시물 데이터 없음
       res.status(200).json({
         likes: [],
         data: arr,
       });
+      return;
     }
-
-    // like 처럼 따로 키 벨류 값으로 드리기
-    // const comments = datas.map((e) => {
-    //   return Comment.findAll({
-    //     where: { itemkey: e.itemkey },
-    //     attributes: ["star", "itemkey"],
-    //   });
-    // });
-    // let sumStar = 0;
-    // let avg2 = 0;
-    // Promise.all(comments).then((value) => {
-    //   // console.log(value);
-    //   const arr2 = value.map((i) => {
-    //     console.log(i.itemkey);
-    //     if (i[0]) {
-    //       return { hi: 1 };
-    //     } else {
-    //       return { hi: 2 };
-    //     }
-    //   });
-    //   console.log(arr2);
-
-    //   res.status(200).json({
-    //     ok: false,
-    //   });
-    //   return;
-    // });
-
-    //  sd
-
-    // sumStar = 0;
-    // avg2 = 0;
-    // if (value[i] === []) {
-    // } else {
-    //   for (let i = 0; i < value[i].length; i++) {
-    //     sumStar += value[i].star;
-    //   }
-    //   avg2 = sumStar / value.length;
-    // }
-
-    // const aaa = value.map((e, i) => {
-    //   console.log(e[i]);
-    //   return {
-    //     itemkey: e.itemkey,
-    //     star: e.star,
-    //   };
-    // });
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     res.status(400).json({
       result: false,
       errormessage: "숙소를 불러오지 못하였습니다",
@@ -167,6 +122,10 @@ router.get("/", VerifyMiddleware, async (req, res) => {
 //         category: e.category,
 //         price: e.price,
 //         location: e.location,
+// itemType: e.itemType,
+// itemSize: e.itemSize,
+// guestRoom: e.guestRoom,
+// convenience: e.convenience,
 //         star: e.Comments,
 //         like: e.Likes,
 //         auth: e.User.nickname,
@@ -208,7 +167,18 @@ router.post("/", AuthMiddleware, async (req, res) => {
   try {
     const { userkey } = res.locals.user.userkey;
 
-    const { title, img, content, category, price, location } = req.body;
+    const {
+      title,
+      img,
+      content,
+      category,
+      price,
+      location,
+      itemType,
+      itemSize,
+      guestRoom,
+      convenience,
+    } = req.body;
 
     if (
       title === "" ||
@@ -216,7 +186,11 @@ router.post("/", AuthMiddleware, async (req, res) => {
       category === "" ||
       content === "" ||
       price === "" ||
-      location === ""
+      location === "" ||
+      itemType === "" ||
+      itemSize === "" ||
+      guestRoom === "" ||
+      convenience === ""
     ) {
       res.status(400).json({
         result: false,
@@ -233,6 +207,10 @@ router.post("/", AuthMiddleware, async (req, res) => {
       price,
       location,
       userkey,
+      itemType,
+      itemSize,
+      guestRoom,
+      convenience,
     });
 
     const nic = await User.findOne({ where: { userkey: item.userkey } });
@@ -246,6 +224,10 @@ router.post("/", AuthMiddleware, async (req, res) => {
         category: item.category,
         price: item.price,
         location: item.location,
+        itemType: item.itemType,
+        itemSize: item.itemSize,
+        guestRoom: item.guestRoom,
+        convenience: item.convenience,
         star: 0,
         auth: nic.nickname,
       },
@@ -317,6 +299,10 @@ router.get("/:itemkey", VerifyMiddleware, async (req, res) => {
           category: data.category,
           price: data.price,
           location: data.location,
+          itemType: data.itemType,
+          itemSize: data.itemSize,
+          guestRoom: data.guestRoom,
+          convenience: data.convenience,
           star: avg2,
           like: likevalue,
           auth: data.User.nickname,
@@ -333,6 +319,10 @@ router.get("/:itemkey", VerifyMiddleware, async (req, res) => {
           category: data.category,
           price: data.price,
           location: data.location,
+          itemType: data.itemType,
+          itemSize: data.itemSize,
+          guestRoom: data.guestRoom,
+          convenience: data.convenience,
           star: avg2,
           like: false,
           auth: data.User.nickname,
@@ -356,7 +346,18 @@ router.put("/:itemkey", AuthMiddleware, async (req, res) => {
     const { userkey } = res.locals.user.userkey;
 
     const { itemkey } = req.params;
-    const { title, img, content, category, price, location } = req.body;
+    const {
+      title,
+      img,
+      content,
+      category,
+      price,
+      location,
+      itemType,
+      itemSize,
+      guestRoom,
+      convenience,
+    } = req.body;
 
     if (
       title === "" ||
@@ -364,7 +365,11 @@ router.put("/:itemkey", AuthMiddleware, async (req, res) => {
       category === "" ||
       content === "" ||
       price === "" ||
-      location === ""
+      location === "" ||
+      itemType === "" ||
+      itemSize === "" ||
+      guestRoom === "" ||
+      convenience === ""
     ) {
       res.status(400).json({
         result: false,
@@ -393,6 +398,10 @@ router.put("/:itemkey", AuthMiddleware, async (req, res) => {
             category,
             price,
             location,
+            itemType,
+            itemSize,
+            guestRoom,
+            convenience,
           },
           { where: { itemkey } }
         );
@@ -460,4 +469,82 @@ router.delete("/:itemkey", AuthMiddleware, async (req, res) => {
   }
 });
 
+// 검색 기능(제목, 위치)
+router.get("/search/:searchWord", VerifyMiddleware, async (req, res) => {
+  try {
+    const { searchWord } = req.params;
+
+    const datas = await Item.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ["nickname"],
+        },
+        {
+          model: Comment,
+          attributes: ["star"],
+        },
+        {
+          model: Like,
+          attributes: ["userkey"],
+        },
+      ],
+      order: [["itemkey", "DESC"]],
+      where: {
+        [Op.or]: [
+          { title: { [Op.like]: `%${searchWord}%` } },
+          { location: { [Op.like]: `%${searchWord}%` } },
+        ],
+      },
+    });
+    // console.log(datas.length);
+
+    const arr = datas.map((e) => {
+      return {
+        itemkey: e.itemkey,
+        title: e.title,
+        img: e.img,
+        category: e.category,
+        price: e.price,
+        location: e.location,
+        star: e.Comments,
+        like: e.Likes,
+        auth: e.User.nickname,
+      };
+    });
+
+    const user = res.locals.user;
+    if (user) {
+      // 로그인 했을때 메인에 좋아요 게시물 데이터 주기
+      const likeitems = await Like.findAll({
+        where: { userkey: user.userkey },
+      });
+
+      res.status(200).json({
+        likes: likeitems.map((i) => {
+          return i.itemkey;
+        }),
+        data: arr,
+      });
+      return;
+    } else {
+      // 비로그인이면 메인에 좋아요 게시물 데이터 없음
+      res.status(200).json({
+        likes: [],
+        data: arr,
+      });
+      return;
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({
+      result: false,
+      errormessage: "검색에 실패했습니다.",
+    });
+    return;
+  }
+});
+
 module.exports = router;
+
+
