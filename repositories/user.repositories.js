@@ -10,5 +10,20 @@ class UserRepository {
         const users = await User.findOne({where: {userId, password}});
         return users;
     };
+
+    duplicateCheck_userId = async(value) => {
+        const users = await User.findOne({where: {userId: value}});
+        return users;
+    };
+
+    duplicateCheck_nickname = async(value) => {
+        const users = await User.findOne({where: {nickname: value}});
+        return users;
+    };
+
+    duplicateCheck_email = async(value) => {
+        const users = await User.findOne({where: {email: value}});
+        return users;
+    };
 };
 module.exports = UserRepository;
