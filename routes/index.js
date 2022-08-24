@@ -7,22 +7,13 @@ const likeRouter = require("./like");
 const commentRouter = require("./comment");
 
 //swagger modules import
-const { swaggerUi, specs } = require('../modules/swagger')
-//  경로 /api/swagger 
-router.use('/swagger', swaggerUi.serve, swaggerUi.setup(specs));
-
-
-
-
+const { swaggerUi, specs } = require("../modules/swagger");
+//  경로 /api/swagger
+router.use("/swagger", swaggerUi.serve, swaggerUi.setup(specs));
 
 router.use("/user", userRouter);
 router.use("/item", itemRouter);
 router.use("/like", likeRouter);
 router.use("/comment", commentRouter);
-
-
-
-
-
 
 module.exports = router;
