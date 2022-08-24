@@ -23,10 +23,28 @@ class CommentRepository{
     }
 
     //저장소~후기(댓글) 게시글의 댓글들 조회하기
-    commentkeygetComment = async (itemkey) =>{
-        const getItem = await Comment.findAll({where : {itemkey}}); 
-        return getItem;
+    itemkeygetComments = async (itemkey) =>{
+        const getItem = await Comment.findAll({
+            where : { itemkey },
+            include:{ model:User,
+                    attributes:["nickname"]}
+                    
+     
+        }); 
+
+        const commentData = getItem.map((s)=>{
+            return{
+                commentkey: s.commentkey,
+                comment: s.comment,
+                userkey: s.userkey,
+                itemkey: s.itemkey,
+                nickname: s.User.nickname,
+
+            };
+        });  
+        return commentData;
     }
+
     //저장소~후기(댓글) 게시글의 댓글하나 조회하기
     itemkeygetComment = async (itemkey) =>{
         const getItem = await Item.findOne({where : {itemkey}}); 
