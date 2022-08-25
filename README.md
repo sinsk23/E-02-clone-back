@@ -4,7 +4,7 @@
 
 # 🌎 Web Site
 
-https://cloneclone-99hanghae.vercel.app/
+https://e-02-clfe.vercel.app/
 
 <br>
 
@@ -12,7 +12,7 @@ https://cloneclone-99hanghae.vercel.app/
 
 # 🎬 시연영상
 
-나중에 링크 올릴예정(임시)
+https://youtu.be/x857WQ6KLes
 
 <br>
 
