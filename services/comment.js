@@ -4,12 +4,8 @@ const CommentRepository = require('../repositories/comment');
 class CommentService{
     commentRepository = new CommentRepository();
     //Service계층 - 댓글생성
-    insertComment = async(userkey,itemkey,comment,star)=>{
-            
-        
-        const getItemkey = await this.commentRepository.itemkeygetPost(itemkey);
-        
-        
+    insertComment = async(userkey,itemkey,comment,star)=>{        
+      //   const getItemkey = await this.commentRepository.itemkeygetPost(itemkey);
            return await this.commentRepository.insertComment(
                 userkey,itemkey,comment, star
             )
@@ -34,7 +30,6 @@ class CommentService{
      editComment = async(userkey,commentkey,comment,star)=>{
         //해당 commentkey를 찾아
         const findcommentId = await this.commentRepository.commentkeygetOne(commentkey);
-
         
         //해당 commentkey 수정
         return await this.commentRepository.editComment(userkey,commentkey,comment,star);
