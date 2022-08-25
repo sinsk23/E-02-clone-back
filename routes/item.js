@@ -75,26 +75,24 @@ const { Op } = require("sequelize");
 // 네비게이션 테스트
 router.get("/", VerifyMiddleware, async (req, res) => {
   try {
-    // const page = parseInt(req.query.page);
+    const page = parseInt(req.query.page);
     // const pageSize = parseInt(req.query.pageSize); // 프론트랑 말해서 5로 고정해도됨
 
-    // let start = 0;
-    // if (page <= 0) {
-    //   page = 1;
-    // } else {
-    //   start = (page - 1) * pageSize;
-    // }
-
-    let where = {};
-    if (req.query.lastkey) {
-      // 맨처음 n개 가져오고 이후 스크롤 할때 lastkey을 넣어서 보내줌(그럼 lastkey보다 작은 itemkey을 조건으로 함)
-      const lastkey = parseInt(req.query.lastkey);
-      where = { itemkey: { [Op.lt]: lastkey } };
+    let start = 0;
+    if (page > 1) {
+      start = (page - 1) * 5;
     }
+
+    // let where = {};
+    // if (req.query.lastkey) {
+    //   // 맨처음 n개 가져오고 이후 스크롤 할때 lastkey을 넣어서 보내줌(그럼 lastkey보다 작은 itemkey을 조건으로 함)
+    //   const lastkey = parseInt(req.query.lastkey);
+    //   where = { itemkey: { [Op.lt]: lastkey } };
+    // }
 
     // 처음엔 조건없이 3개 가져오고 이후엔 lastkey 값보다 작은 조건으로 3개 가져옴
     const datas = await Item.findAll({
-      where,
+      // where,
       include: [
         {
           model: User,
@@ -111,7 +109,7 @@ router.get("/", VerifyMiddleware, async (req, res) => {
       ],
       order: [["itemkey", "DESC"]],
       limit: 5,
-      // offset: start,
+      offset: start,
     });
 
     const arr = datas.map((e) => {
