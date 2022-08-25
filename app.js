@@ -17,8 +17,9 @@ app.use(express.static("public"));
 
 app.use(
   cors({
-    origin: true, // 출처 허용 옵션
+    // origin: true, // 출처 허용 옵션
     // origin: "https://cloneclone-99hanghae.vercel.app",
+    origin: "https://e-02-clfe.vercel.app",
     withCredentials: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
   })
 );
@@ -31,9 +32,9 @@ app.get("/", (req, res) => {
   res.status(200).json({ massage: "연동 잘 됨." });
 });
 
-// app.listen(port, () => {
-//   console.log(port, "포트로 서버가 열렸어요!");
-// });
+app.listen(port, () => {
+  console.log(port, "포트로 서버가 열렸어요!");
+});
 
 http.createServer(app).listen(3000);
 https.createServer(options, app).listen(443);
