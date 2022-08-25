@@ -17,7 +17,11 @@ app.use(express.static("public"));
 
 const corsOptions = {
   // origin: true, // 출처 허용 옵션
-  origin: [http://localhost:3000, "https://cloneclone-99hanghae.vercel.app", "https://e-02-clfe.vercel.app"],
+  origin: [
+    "http://localhost:3000",
+    "https://cloneclone-99hanghae.vercel.app",
+    "https://e-02-clfe.vercel.app",
+  ],
   withCredentials: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
 };
 
