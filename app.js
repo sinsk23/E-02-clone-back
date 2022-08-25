@@ -15,14 +15,15 @@ const options = {
 };
 app.use(express.static("public"));
 
-app.use(
-  cors({
-    // origin: true, // 출처 허용 옵션
-    // origin: "https://cloneclone-99hanghae.vercel.app/",
-    origin: "https://e-02-clfe.vercel.app/",
-    withCredentials: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
-  })
-);
+const corsOptions = {
+  // origin: true, // 출처 허용 옵션
+  // origin: "https://cloneclone-99hanghae.vercel.app/",
+  origin: "https://e-02-clfe.vercel.app/",
+  // withCredentials: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
