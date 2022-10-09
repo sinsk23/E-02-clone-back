@@ -24,7 +24,7 @@ https://youtu.be/x857WQ6KLes
 
 - 김대석 : sign / login, 비밀번호 암호화
 - 시진엽 : 게시글 CRUD, 찜하기, 찜목록, 무한스크롤, 검색
-- 신승규 : 댓글 CRUD, swagger
+- 신성규 : 댓글 CRUD, swagger
 
 <br>
 👉 FRONT-END
